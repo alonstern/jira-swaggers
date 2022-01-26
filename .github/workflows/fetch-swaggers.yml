@@ -6,23 +6,20 @@ on:
     - cron: 0 0 * * *
 
 jobs:
-  create-pull-request:
+  fetch-swaggers:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch Software Swagger
-        run: wget https://developer.atlassian.com/cloud/jira/software/swagger.v3.json
-
-      - name: Fetch Platform Swagger
-        run: wget https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json
-
       - name: checking out code
         uses: actions/checkout@v2
 
       - name: extract git commit data
         uses: rlespinasse/git-commit-data-action@v1.x
 
-      - name: Update author information
-        run: echo ${{ env.GIT_COMMIT_AUTHOR_NAME }} > AUTHOR
+      - name: Fetch Software Swagger
+        run: wget https://developer.atlassian.com/cloud/jira/software/swagger.v3.json
+
+      - name: Fetch Platform Swagger
+        run: wget https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json
 
       - name: Raise PR
         uses: peter-evans/create-pull-request@v3
