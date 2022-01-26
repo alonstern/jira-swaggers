@@ -15,12 +15,23 @@ jobs:
       - name: Fetch Platform Swagger
         run: wget https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3.10.1
+      - name: checking out code
+        uses: actions/checkout@v2
+
+      - name: extract git commit data
+        uses: rlespinasse/git-commit-data-action@v1.x
+
+      - name: Update author information
+        run: echo ${{ env.GIT_COMMIT_AUTHOR_NAME }} > AUTHOR
+
+      - name: Raise PR
+        uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GH_TOKEN }}
-          commit-message: Update Jira swaggers
-          title: Update Jira Swaggers
-          body: Auto-created Pull Request to update Jira swaggers
-          branch: update-jira-swaggers # The branch where you commit
+          branch: "update-jira-swaggers"
           base: main
+          title: "Update Jira Swaggers"
+          committer: ${{ env.GIT_COMMIT_AUTHOR_NAME }} <${{ env.GIT_COMMIT_AUTHOR_EMAIL }}">
+          author: ${{ env.GIT_COMMIT_AUTHOR_NAME }} <${{ env.GIT_COMMIT_AUTHOR_EMAIL }}">
+          body: Update Jira Swaggers
+          token: ${{ secrets.GITHUB_TOKEN }}
+          delete-branch: true
