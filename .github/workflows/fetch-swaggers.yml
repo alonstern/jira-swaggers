@@ -1,0 +1,25 @@
+name: Fetch Swaggers
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Software Swagger
+        run: wget https://developer.atlassian.com/cloud/jira/software/swagger.v3.json
+
+      - name: Fetch Platform Swagger
+        run: wget https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3.10.1
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: Update Jira swaggers
+          title: Update Jira Swaggers
+          body: Auto-created Pull Request to update Jira swaggers
+          branch: update-jira-swaggers # The branch where you commit
+          base: main
